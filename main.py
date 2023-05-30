@@ -10,8 +10,9 @@ detector = HandDetector(detectionCon=0.8)
 while True:
 
     try:
-
-        check, cameraFeedImg = cap.read()
+        readVideo = cap.read()
+        check = readVideo[0]
+        cameraFeedImg= readVideo[1]
 
         cameraFeedImg = cv2.flip(cameraFeedImg, 1)
 
@@ -21,25 +22,25 @@ while True:
 
         if hands:
             hand1 = hands[0]
-            lmList1 = hand1["lmList"]
-            handType1 = hand1["type"]
+            lmList1 = hand1["lmList"]  
+            handType1 = hand1["type"]  
             fingers1 = detector.fingersUp(hand1)
 
             currentFingerUp = ""
-
+        
             # Apply various filters to the camera fedd based on the fingers
-            if fingers1[0] == 0:
-                currentFingerUp = "Thumb"
+            if fingers1[0]== 0:
+                currentFingerUp="Thumb"
                 cameraFeedImg = cv2.cvtColor(cameraFeedImg, cv2.COLOR_BGR2GRAY)
             elif fingers1[1] == 1:
                 currentFingerUp = "Index Finger"
-                cameraFeedImg = cv2.xphoto.oilPainting(
-                    cameraFeedImg, size=7, dynRatio=1)
+                cameraFeedImg = cv2.xphoto.oilPainting(cameraFeedImg, size=7, dynRatio=1)
             elif fingers1[2] == 1:
                 currentFingerUp = "Middle Finger"
-                blurredImg = cv2.GaussianBlur(cameraFeedImg, (21, 21), 0)
-                cameraFeedImg = cv2.divide(
-                    cameraFeedImg, 255 - blurredImg, scale=256)
+                grayscaleImage = cv2.cvtColor(cameraFeedImg, cv2.COLOR_BGR2GRAY)
+                invertedImg = 255 - grayscaleImage
+                blurredImg = cv2.GaussianBlur(invertedImg, (21, 21), 0)
+                cameraFeedImg = cv2.divide(grayscaleImage, 255 - blurredImg, scale=256)
             elif fingers1[3] == 1:
                 currentFingerUp = "Ring Finger"
             elif fingers1[4] == 1:
@@ -47,29 +48,28 @@ while True:
             else:
                 currentFingerUp = ""
 
-            cv2.putText(cameraFeedImg, handType1 + " : " + currentFingerUp, (75, 90),
+     
+            cv2.putText(cameraFeedImg, handType1 + " : " + currentFingerUp , (75, 90),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-
+            
             hand2 = hands[1]
-            lmList2 = hand2["lmList"]
-            handType2 = hand2["type"]
+            lmList2 = hand2["lmList"]  
+            handType2 = hand2["type"]  
             fingers2 = detector.fingersUp(hand2)
 
             currentFingerUp = ""
-
+            
             # Apply various filters to the camera fedd based on the fingers
-            if fingers2[0] == 0:
-                currentFingerUp = "Thumb"
+            if fingers2[0]== 0:
+                currentFingerUp="Thumb"
                 cameraFeedImg = cv2.cvtColor(cameraFeedImg, cv2.COLOR_BGR2GRAY)
             elif fingers2[1] == 1:
                 currentFingerUp = "Index Finger"
-                cameraFeedImg = cv2.xphoto.oilPainting(
-                    cameraFeedImg, size=7, dynRatio=1)
+                cameraFeedImg = cv2.xphoto.oilPainting(cameraFeedImg, size=7, dynRatio=1)
             elif fingers2[2] == 1:
                 currentFingerUp = "Middle Finger"
                 blurredImg = cv2.GaussianBlur(cameraFeedImg, (21, 21), 0)
-                cameraFeedImg = cv2.divide(
-                    cameraFeedImg, 255 - blurredImg, scale=256)
+                cameraFeedImg = cv2.divide(cameraFeedImg, 255 - blurredImg, scale=256)
             elif fingers2[3] == 1:
                 currentFingerUp = "Ring Finger"
             elif fingers2[4] == 1:
@@ -77,7 +77,7 @@ while True:
             else:
                 currentFingerUp = ""
 
-            cv2.putText(cameraFeedImg, handType2 + " : " + currentFingerUp, (375, 90),
+            cv2.putText(cameraFeedImg, handType2 + " : " + currentFingerUp , (375, 90),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
     except Exception as e:
