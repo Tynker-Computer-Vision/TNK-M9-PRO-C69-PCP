@@ -68,8 +68,10 @@ while True:
                 cameraFeedImg = cv2.xphoto.oilPainting(cameraFeedImg, size=7, dynRatio=1)
             elif fingers2[2] == 1:
                 currentFingerUp = "Middle Finger"
-                blurredImg = cv2.GaussianBlur(cameraFeedImg, (21, 21), 0)
-                cameraFeedImg = cv2.divide(cameraFeedImg, 255 - blurredImg, scale=256)
+                grayscaleImage = cv2.cvtColor(cameraFeedImg, cv2.COLOR_BGR2GRAY)
+                invertedImg = 255 - grayscaleImage
+                blurredImg = cv2.GaussianBlur(invertedImg, (21, 21), 0)
+                cameraFeedImg = cv2.divide(grayscaleImage, 255 - blurredImg, scale=256)
             elif fingers2[3] == 1:
                 currentFingerUp = "Ring Finger"
             elif fingers2[4] == 1:
